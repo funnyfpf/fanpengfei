@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ficc-ofa-dev
+  name: ficc-ofa-dev
+  namespace: ficc-ofa-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ficc-ofa-dev
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ficc-ofa-dev
+    spec:
+      imagePullSecrets:
+      - name: docker-secret
+      containers:
+      - image: registry.cn-beijing.aliyuncs.com/fpf_k8s_images/ficc:qa
+        name: ficc-ofa-dev
+        resources: 
+          limits:
+            cpu: 100m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ficc-ofa-dev
+  namespace: ficc-ofa-dev
+  labels:
+    app: ficc-ofa-dev
+  annotations:
+    kubesphere.io/creator: admin
+spec:
+  ports:
+    - name: http-8088
+      protocol: TCP
+      port: 8088
+      targetPort: 8088
+  selector:
+    app: ficc-ofa-dev
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+

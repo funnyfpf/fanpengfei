@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ficc-test
+  name: ficc-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ficc-test
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ficc-test
+    spec:
+      imagePullSecrets:
+        - name: docker-secret
+      containers:
+        - image: registry.cn-beijing.aliyuncs.com/fpf_k8s_images/test-build:v1.0.0-20230512050306-c824ed60
+          name: ficc-test
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
